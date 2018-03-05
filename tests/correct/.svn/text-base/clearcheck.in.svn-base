@@ -1,0 +1,15 @@
+#checks if clear is working
+
+java -ea jump61.Main
+None
+===#1===
+manual blue
+start
+1 1
+5 3
+3 4
+2 1
+clear
+dump
+quit
+===#2===

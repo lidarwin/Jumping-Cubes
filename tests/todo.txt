@@ -1,0 +1,9 @@
+Tests to write:
+    Correct:
+        1) jump with neighbors 2,3, 4
+        4) jump multiple times
+        5) test commands with excess whitespace
+        6) test commands with excess arguments
+    Incorrect:
+        1) test too few arguments
+        2) test wrong arguments

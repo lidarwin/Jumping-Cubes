@@ -1,0 +1,12 @@
+#tests if program exits at EOF
+
+java -ea jump61.Main
+None
+===#1===
+size 2
+manual blue
+start
+1 1
+1 2
+dump
+===#2===

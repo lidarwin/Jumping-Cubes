@@ -1,0 +1,514 @@
+                if ((i == 1 && j == 1) || (i == 1 && j == b.size()) || (i == b.size() && j == 1) || (i == b.size() && j == b.size())) {
+                    if (b.color(i, j) == WHITE) {
+                        val += 0;
+                    } else if (b.color(i,j) == p) {
+                        val += 1;
+                    } else {
+                        val -= 1;
+                    }
+                }
+
+
+
+
+ function alphabeta(node, depth, α, β, maximizingPlayer)
+    if depth = 0 or node is a terminal node
+        return the heuristic value of node
+    if maximizingPlayer
+        for each child of node
+            α := max(α, alphabeta(child, depth - 1, α, β, FALSE))
+            if β ≤ α
+                break (* β cut-off *)
+        return α
+    else
+        for each child of node
+            β := min(β, alphabeta(child, depth - 1, α, β, TRUE))
+            if β ≤ α
+                break (* α cut-off *)
+        return β
+
+
+    private BestMove alphabeta(Color c, int d, BestMove alpha, BestMove beta) {
+    	Color p = c.opposite();
+    	BestMove a = alpha;
+    	BestMove b = beta;
+        if (_board.getWinner() == p && _board.whoseMove() == c) {
+            a.setMyScore(Integer.MIN_VALUE);
+            return a;
+        } else if (_board.getwinner() == c && _board.whoseMove() == p) {
+        	b.setMyScore(Integer.MAX_VALUE);
+        } else if (depth == 0) {
+        	if (_board.whoseMove() == c) {
+        		return guessBestMove(c);
+        	}
+            return guessBestMove(p);
+        } else if (_board.whoseMove() == c) {
+	        for (int i = 0; i < _board.size(); i += 1) {
+	            if (_board.isLegal(_board.row(i), _board.col(i))) {
+	            	a.setMyMove(i);
+	            	_board.makeMove(_board.row(i), _board.col(i));
+	            	a.setMyScore() = Math.max(a.getMyScore(), alphabeta(c, d - 1, a, b).getMyScore());
+	            	_board.undo()
+	                if (b.getMyScore() < a.getMyScore()) {
+	                	break;
+	                }
+	            }
+	        }
+	        return a;
+        } else {
+	        for (int i = 0; i < _board.size(); i += 1) {
+	            if (_board.isLegal(_board.row(n), _board.col(n))) {
+	            	b.setMyMove(i);
+	            	_board.makeMove(_board.row(n), _board.col(n));
+	            	b = Math.min(b.getMyScore(), alphabeta(c, d - 1, a, b).getMyScore());
+	            	_board.undo();
+	                if (b.getMyScore() < a.getMyScore()) {
+	                	break;
+	                }
+	            }
+	        }
+	        return b;
+        }
+    }
+
+
+
+
+
+
+
+    private int minmax(Color p, Board b, int d, int alpha, int beta, boolean maximizingPlayer) {
+    	//ArrayList<Integer> moves = new ArrayList<Integer>();
+    	if (d == 0) {
+    		return staticEval(p, b);
+    	}
+    	int a = alpha;
+	   	int b = beta;
+	    Board[] permut = new Board[b.size() * b.size()];
+	    for (int i = 0; i < b.size() * b.size(); i += 1) {
+	    	MutableBoard perm = new MutableBoard(b);
+	    }
+    	if (maximizingPlayer) {
+	    	for (int i = 0; i < permut.length && permut[i] != null; i += 1) {
+	    		a = Math.max(a, minmax(permut[i]));
+	    	}
+	        return a;
+	    } else {
+	    	for (int i = 0; i < permut.length && permut[i] != null; i += 1) {
+	    		b = Math.min(a, minmax(permut[i]));
+	    	}
+	    }
+    }
+
+
+
+
+
+
+
+
+            Iterator legalMoves = start.getLegalMoves();
+        while (legalMoves.hasNext()) {
+            int[] move = legalMoves.next();
+            start.makeMove(move[0], move[1])
+            reply = minmax(c.opposite(), depth - 1);
+            start.undo();
+            if (c == _board.whoseMove() && reply.getMyScore() > bestSoFar.getMyScore()) || (c.opposite() == _borad.whoseMove() && reply.getMyScore() < bestSoFar.getMyScore()) {
+                bestSoFar.setMyMove(move);
+                bestSoFar.setMyScore(reply.getMyScore());
+            } 
+        }
+
+
+
+
+
+
+
+
+
+    /** The minmax function takes CUT to prune, color C and DEPTH.*/
+    private BestMove minmax(Color c, int depth, int cut) {
+        BestMove b = new BestMove();
+        if (_board.getWinner() == c) {
+            b.setMyScore(Integer.MAX_VALUE);
+            return b;
+        } else if (_board.getWinner().toString() != "WHITE") {
+            b.setMyScore(Integer.MIN_VALUE);
+            return b;
+        } else if (depth == 0) {
+            return guessBestMove(c, cut);
+        }
+        BestMove bestSoFar = new BestMove();
+        BestMove reply;
+        if (c == _board.whoseMove()) {
+            bestSoFar.setMyScore(Integer.MIN_VALUE);
+        } else {
+            bestSoFar.setMyScore(Integer.MAX_VALUE);
+        }
+        ArrayList<Integer> legalMoves = generateMoves();
+        for (int i = 0; i < legalMoves.size(); i += 1) {
+            int move = legalMoves[i];
+            _board.makeMove(_board.row(move), _board.col(move));
+            reply = minmax(c.opposite(), depth - 1);
+            _board.undo();
+            if (c == _board.whoseMove() && reply.getMyScore() > bestSoFar.getMyScore()) || (c.opposite() == _borad.whoseMove() && reply.getMyScore() < bestSoFar.getMyScore()) {
+                bestSoFar.setMyMove(move);
+                bestSoFar.setMyScore(reply.getMyScore());
+            } 
+        }
+        return bestSoFar;
+    }
+
+
+    /** Method takes CUT to prune, color C to return a 
+     *  heuristic BestMove.*/
+    private BestMove guessBestMove(Color c, int cut) {
+        BestMove move;
+        int count = 0;
+        ArrayList<Integer> legalMoves = generateMoves();
+        for (int i = 0; i < legalMoves.size(); i += 1) {
+            _board.makeMove(_board.row(legalMoves[i]), _board.col(legalMoves[i]), _board.whoseMove);
+            int stat = staticEval(_board);
+            if (stat >= move.getMyScore) {
+                move.setMyMove(legalMoves[i]);
+                move.setMyScore(stat);
+                if (move.getMyScore() >= cut) {
+                    return move;
+                }
+            }
+        }
+        return move;
+    }
+
+    /** Method that returns all the legal moves for the board.*/
+    private ArrayList<Integer> generateMoves() {
+        ArrayList<Integer> theList = new ArrayList<Integer>();
+        for (int i = 0; i < _board.size(); i += 1) {
+            if (_board.isLegal(_board.row(n), _board.col(n))) {
+                theList.add(n);
+            }
+        }
+        return theList;
+    }
+
+
+    /** Return the minimum of CUTOFF and the minmax value of board B
+     *  (which must be mutable) for player P to a search depth of D
+     *  (where D == 0 denotes evaluating just the next move).
+     *  If MOVES is not null and CUTOFF is not exceeded, set MOVES to
+     *  a list of all highest-scoring moves for P; clear it if
+     *  non-null and CUTOFF is exceeded. the contents of B are
+     *  invariant over this call. */
+    private int minmax(Color p, Board b, int d, int cutoff,
+                       ArrayList<Integer> moves) {
+        return 0;
+        // FIXME
+    }
+
+
+
+    private BestMove alphabeta(Color c, int d, BestMove alpha, BestMove beta) {
+        Color p = c.opposite();
+        BestMove a = alpha;
+        BestMove b = beta;
+        if (_board.getWinner() == p) {
+            a.setMyScore(Integer.MIN_VALUE);
+            return a;
+        } else if (_board.getWinner() == c) {
+            b.setMyScore(Integer.MAX_VALUE);
+            return b;
+        } else if (d == 0) {
+            return guessBestMove(c);
+        } else if (_board.whoseMove() == c) {
+            for (int i = 0; i < _board.size() * _board.size(); i += 1) {
+                if (_board.isLegal(c, _board.row(i), _board.col(i))) {
+                    int aS = a.getMyScore();
+                    int aM = a.getmyMove();
+                    a.setMyMove(i);
+                    _board.makeMove(c, _board.row(i), _board.col(i));
+                    a.setMyScore(Math.max(a.getMyScore(), alphabeta(c, d - 1, a, b).getMyScore()));
+                    _board.undo();
+                    if (b.getMyScore() < a.getMyScore()) {
+                        break;
+                    }
+                    if (a.getMyScore() < aS) {
+                        a.setMyMove(aM);
+                    }
+                }
+            }
+            return a;
+        } else {
+            for (int i = 0; i < _board.size() * _board.size(); i += 1) {
+                if (_board.isLegal(p, _board.row(i), _board.col(i))) {
+                    int bS = b.getMyScore();
+                    int bM = b.getmyMove();
+                    b.setMyMove(i);
+                    _board.makeMove(p, _board.row(i), _board.col(i));
+                    b.setMyScore(Math.min(b.getMyScore(), alphabeta(c, d - 1, a, b).getMyScore()));
+                    _board.undo();
+                    if (b.getMyScore() < a.getMyScore()) {
+                        break;
+                    }
+                    if (b.getMyScore() > bS) {
+                        b.setMyMove(bM);
+                    }
+                }
+            }
+            return b;
+        }
+    }
+
+    /** For color C, gives highest heuristic value.*/
+    private BestMove guessBestMove(Color c) {
+        BestMove move = new BestMove();
+        if (_board.whoseMove() == c) {
+                move.setMyScore(Integer.MIN_VALUE);
+            } else {
+                move.setMyScore(Integer.MAX_VALUE);
+            }
+        ArrayList<Integer> legalMoves = generateMoves();
+        for (int i = 0; i < legalMoves.size(); i += 1) {
+            _board.makeMove(_board.whoseMove(), _board.row(legalMoves.get(i)), _board.col(legalMoves.get(i)));
+            int stat = staticEval(c, _board);
+            if (_board.whoseMove() == c.opposite() && move.getMyScore() > stat) {
+                move.setMyScore(stat);
+                move.setMyMove(i);
+            } else if (_board.whoseMove() == c && move.getMyScore() < stat) {
+                move.setMyScore(stat);
+                move.setMyScore(i);
+            }
+            _board.undo();
+        }
+        return move;
+    }
+
+
+
+    /** a[1] is the move. a[0] is the score.*/
+
+    private int[] alphabeta(Color c, int d, int[] alpha, int[] beta) {
+        int[] a = new int[2];
+        int[] b = new int[2];
+        a[0] = alpha[0];
+        a[1] = alpha[1];
+        b[0] = beta[0];
+        b[1] = beta[1];
+        if (_board.getWinner() == c.opposite()) {
+            a[0] = Integer.MIN_VALUE;
+            return a;
+        } else if (_board.getWinner() == c) {
+            b[0] = Integer.MAX_VALUE;
+            return b;
+        } else if (d == 0) {
+            if (_board.whoseMove() == c) {
+                return guessBestMove(c);
+            } else {
+                return guessWorstMove(c.opposite());
+            }
+        }
+    }
+
+
+
+        /** Returns heuristic value of board B for player P.
+     *  Higher is better for P. */
+    private int staticEval(Color c, Board b) {
+        String[][][] xyy = b.getXy();
+        if (b.getWinner() == c) {
+            return Integer.MAX_VALUE;
+        } else if (b.getWinner().toString() != "WHITE") {
+            return Integer.MIN_VALUE;
+        }
+        int val = 0;
+        for(int i = 1; i < b.size() + 1; i += 1) {
+            for (int j = 1; j < b.size() + 1; j += 1) {
+                if (b.color(i, j).toString() == "WHITE") {
+                    val += 0;
+                } else if (b.color(i,j) == c) {
+                    val += 1;
+                } else {
+                    val -= 1;
+                }
+            }
+        }
+        return val;
+    }
+
+
+
+  @Override
+    void makeMove() {
+        if (!_game.isPlaying()) {
+            return;
+        } else {
+            int[] a = new int[2];
+            a[0] = Integer.MIN_VALUE;
+            int[] b = new int[2];
+            b[0] = Integer.MAX_VALUE;
+            int mov = alphabeta(_color, 4, a, b)[1];
+            if (!_board.isLegal(_color, _board.row(mov), _board.col(mov))) {
+                System.out.println("AI Messed up legal moves, tried to do " + mov);
+            } else {
+            _game.makeMove(_board.row(mov), _board.col(mov));
+            }
+        }
+    }
+
+    private int alphabeta(Color c, int d, int alpha, int beta) {
+        int a = alpha;
+        int b = beta;
+        if (_board.getWinner() == c.opposite()) {
+            return Integer.MIN_VALUE;
+        } else if (_board.getWinner() = c) {
+            return Integer.MAX_VALUE;
+        } else if (d == 0) {
+            return staticEval(this);
+        } else if (_board.whoseMove() == c) {
+            for (int i = 0; i < _board.size() * _board.size(); i += 1) {
+                if (_board.isLegal(c, _board.row(i), _board.col(i))) {
+                    _board.makeMove(c, _board.row(i), _board.col(i));
+                    a = Math.max(a, alphabeta(c, d - 1, a, b));
+                    _board.undo();
+                    if (b < a) {
+                        break;
+                    }
+                }
+            }
+            return a;
+        } else {
+            for (int i = 0; i < _board.size() * _board.size(); i += 1) {
+                if (_board.isLegal(c, _board.row(i), _board.col(i))) {
+                    _board.makeMove(c, _board.row(i), _board.col(i));
+                    b = Math.min(b, alphabeta(c, d - 1, a, b));
+                    _board.undo();
+                    if (b < a) {
+                        break;
+                    }
+                }
+            }
+            return b;
+        }
+    }
+
+
+
+    /** a[1] is the move. a[0] is the score.*/
+    private int[] alphabeta(Color c, int d, int[] alpha, int[] beta) {
+        int[] a = new int[2];
+        int[] b = new int[2];
+        a[0] = alpha[0];
+        a[1] = alpha[1];
+        b[0] = beta[0];
+        b[1] = beta[1];
+        if (_board.getWinner() == c.opposite()) {
+            a[0] = Integer.MIN_VALUE;
+            return a;
+        } else if (_board.getWinner() == c) {
+            b[0] = Integer.MAX_VALUE;
+            return b;
+        } else if (d == 0) {
+            return guessBestMove(c);
+        } else if (_board.whoseMove() == c) {
+            for (int i = 0; i < _board.size() * _board.size(); i += 1) {
+                if (_board.isLegal(c, _board.row(i), _board.col(i))) {
+                    int oldScore = a[0];
+                    int oldMove = a[1];
+                    a[1] = i;
+                    _board.makeMove(c, _board.row(i), _board.col(i));
+                    a[0] = Math.max(oldScore, alphabeta(c, d - 1, a, b)[0]);
+                    _board.undo();
+                    if (b[0] < a[0]) {
+                        break;
+                    }
+                }
+            }
+            return a;
+        } else {
+            for (int i = 0; i < _board.size() * _board.size(); i += 1) {
+                if (_board.isLegal(c.opposite(), _board.row(i), _board.col(i))) {
+                    int oldScore = b[0];
+                    int oldMove = b[1];
+                    b[1] = i;
+                    _board.makeMove(c, _board.row(i), _board.col(i));
+                    b[0] = Math.min(oldScore, alphabeta(c, d - 1, a, b)[0]);
+                    _board.undo();
+                    if (b[0] < a[0]) {
+                        break;
+                    }
+                }
+            }
+            return b;
+        }
+    }
+
+    /** For color C, gives highest heuristic value.*/
+    private int[] guessBestMove(Color c) {
+        int[] move = new int[2];
+        if (_board.whoseMove() == c) {
+                move[0] = Integer.MIN_VALUE;
+            } else {
+                move[0] = Integer.MAX_VALUE;
+            }
+        ArrayList<Integer> legalMoves = generateMoves();
+        for (int i = 0; i < legalMoves.size(); i += 1) {
+            _board.makeMove(_board.whoseMove(), _board.row(legalMoves.get(i)), _board.col(legalMoves.get(i)));
+            int stat = staticEval(c, _board);
+            if (_board.whoseMove() == c.opposite() && move[0] < stat) {
+                move[0] = stat;
+                move[1] = i;
+            } else if (_board.whoseMove() == c && move[0] > stat) {
+                move[0] = stat;
+                move[1] = i;
+            }
+            _board.undo();
+        }
+        return move;
+    }
+
+
+
+
+
+
+    /** Method that returns all the legal moves for the board.*/
+    private ArrayList<Integer> generateMoves() {
+        ArrayList<Integer> theList = new ArrayList<Integer>();
+        for (int i = 0; i < _board.size() * _board.size(); i += 1) {
+            if (_board.isLegal(_board.whoseMove(), _board.row(i), _board.col(i))) {
+                theList.add(i);
+            }
+        }
+        return theList;
+    }
+
+
+
+    class BestMove {
+
+        BestMove() {
+            myScore = 0;
+            myMove = 0;
+        }
+
+
+        void setMyScore(int n) {
+            myScore = n;
+        }
+
+        void setMyMove(int m) {
+            myMove = m;
+        }
+
+        int getMyScore() {
+            return myScore;
+        }
+
+        int getmyMove() {
+            return myMove;
+        }
+
+        private int myScore;
+
+        private int myMove;
+    }

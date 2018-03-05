@@ -1,0 +1,16 @@
+#tests if the program knows to recognize playing states
+
+java -ea jump61.Main
+None
+===#1===
+size 2
+manual blue
+1 1
+1 2
+1 1
+start
+1 1
+1 2
+dump
+quit
+===#2===
